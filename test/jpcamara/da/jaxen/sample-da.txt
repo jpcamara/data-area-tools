@@ -1,0 +1,3 @@
+01 :P:-LEVEL.
+  05 :P:-LEVEL-2.
+    10 :P:-LEVEL-3     PIC X.

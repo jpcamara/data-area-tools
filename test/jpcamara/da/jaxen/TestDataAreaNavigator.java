@@ -15,13 +15,11 @@ public class TestDataAreaNavigator {
     public static void setUpClass() throws Exception {
         DA = new CobolDAParser(new File("test/jpcamara/da/jaxen/sample-da.txt"), ":P:").parseDA();
     }
-    
+
     @Test
     public void findContent() throws Exception {
-        BaseXPath xpath = new BaseXPath("SOME/PATH/TO/DATA",
+        BaseXPath xpath = new BaseXPath("LEVEL-2/LEVEL-3",
                 new DataAreaNavigator());
-        xpath.evaluate(new DataAreaElement(null, "root", "O".getBytes(), 0, DA.getLength(), DA));
-
-        
+        xpath.evaluate(new DataAreaElement(null, DA.getName(), "O".getBytes(), 0, DA.getLength(), DA));
     }
 }

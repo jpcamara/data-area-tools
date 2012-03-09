@@ -1,20 +1,20 @@
 package jpcamara.da.cobol;
 
-import jpcamara.da.CobolDAToken;
-import jpcamara.da.CobolDATokenType;
 import jpcamara.da.DataAreaNode;
+import jpcamara.da.DataAreaToken;
+import jpcamara.da.DataAreaTokenType;
 import jpcamara.da.DataAreaValueType;
 
 import java.io.*;
 import java.util.LinkedList;
 
 public class CobolDAParser {
-    private CobolDAToken currentToken;
+    private DataAreaToken currentToken;
     private int fillerIncrement = 1;
     private int redefineIncrement = 1;
 
     public CobolDAParser(String content, String symbolReplace) {
-        currentToken = CobolDAToken.tokenize(content, symbolReplace).removeTokens(CobolDATokenType.COMMENT);
+        currentToken = DataAreaToken.tokenize(content, symbolReplace).removeTokens(DataAreaTokenType.COMMENT);
     }
 
     public CobolDAParser(File fileContent, String symbolReplace) throws IOException {
@@ -24,7 +24,7 @@ public class CobolDAParser {
         while ((line = reader.readLine()) != null) {
             content.append(line);
         }
-        currentToken = CobolDAToken.tokenize(content.toString(), symbolReplace).removeTokens(CobolDATokenType.COMMENT);
+        currentToken = DataAreaToken.tokenize(content.toString(), symbolReplace).removeTokens(DataAreaTokenType.COMMENT);
     } 
 
     public DataAreaNode parseDA() {
@@ -37,7 +37,7 @@ public class CobolDAParser {
         DataAreaNode currentNode = head;
         
         while (currentToken != null && !currentToken.isEOF()) {
-            CobolDAToken previous = currentToken.previousToken();
+            DataAreaToken previous = currentToken.previousToken();
 
             //parse level + start new node
             if (previous == null || previous.isTerminator()) {

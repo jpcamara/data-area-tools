@@ -1,6 +1,6 @@
 package jpcamara.da;
 
-public enum CobolDATokenType {
+public enum DataAreaTokenType {
     COMMENT,
     SYMBOL,
     OPERATOR,

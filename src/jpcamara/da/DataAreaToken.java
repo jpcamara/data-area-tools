@@ -2,23 +2,23 @@ package jpcamara.da;
 
 import jpcamara.da.cobol.CobolDATokenizer;
 
-public class CobolDAToken {
-    private static final CobolDAToken EOF = new CobolDAToken(CobolDATokenType.EOF, null, 0, 0, 0, 0);
+public class DataAreaToken {
+    private static final DataAreaToken EOF = new DataAreaToken(DataAreaTokenType.EOF, null, 0, 0, 0, 0);
 
     static {
         EOF._next = EOF;
     }
 
-    private CobolDATokenType _type;
+    private DataAreaTokenType _type;
     private String _value;
-    private CobolDAToken _next;
-    private CobolDAToken _previous;
+    private DataAreaToken _next;
+    private DataAreaToken _previous;
     private int _line;
     private int _col;
     private int _start;
     private int _end;
 
-    public CobolDAToken(CobolDATokenType type, String value, int line, int col, int start, int end) {
+    public DataAreaToken(DataAreaTokenType type, String value, int line, int col, int start, int end) {
         _type = type;
         _value = value;
         _line = line;
@@ -27,7 +27,7 @@ public class CobolDAToken {
         _end = end;
     }
 
-    public void setNext(CobolDAToken t) {
+    public void setNext(DataAreaToken t) {
         _next = t;
         if (!isEOF() || !t.isEOF()) {
             t._previous = this;
@@ -42,12 +42,12 @@ public class CobolDAToken {
         return this == EOF;
     }
 
-    public CobolDAToken previousToken()
+    public DataAreaToken previousToken()
     {
         return(_previous);
     }
 
-    public CobolDAToken nextToken() {
+    public DataAreaToken nextToken() {
         return _next;
     }
 
@@ -55,12 +55,12 @@ public class CobolDAToken {
         return _value != null && _value.equalsIgnoreCase(value);
     }
 
-    public static CobolDAToken tokenize(String contents, String symbolReplace) {
-        CobolDAToken first = null;
-        CobolDAToken previous = null;
+    public static DataAreaToken tokenize(String contents, String symbolReplace) {
+        DataAreaToken first = null;
+        DataAreaToken previous = null;
         CobolDATokenizer tokenizer = new CobolDATokenizer(contents, symbolReplace);
         while (tokenizer.hasMoreTokens()) {
-            CobolDAToken t = tokenizer.nextToken();
+            DataAreaToken t = tokenizer.nextToken();
             if (previous != null) {
                 previous.setNext(t);
             }
@@ -70,22 +70,22 @@ public class CobolDAToken {
             previous = t;
         }
         if (previous != null) {
-            previous.setNext(CobolDAToken.EOF);
+            previous.setNext(DataAreaToken.EOF);
         }
         if (first == null) {
-            first = CobolDAToken.EOF;
+            first = DataAreaToken.EOF;
         }
         return first;
     }
 
-    public CobolDAToken removeTokens( CobolDATokenType... typesToRemove )
+    public DataAreaToken removeTokens( DataAreaTokenType... typesToRemove )
     {
-        CobolDAToken first = null;
-        CobolDAToken previous = null;
-        CobolDAToken current = this;
+        DataAreaToken first = null;
+        DataAreaToken previous = null;
+        DataAreaToken current = this;
         while( current != EOF ) {
             if (!isMatch(current, typesToRemove)) {
-                CobolDAToken copy = new CobolDAToken(current._type, current._value, current._line, current._col, current._start, current._end);
+                DataAreaToken copy = new DataAreaToken(current._type, current._value, current._line, current._col, current._start, current._end);
                 if (current.nextToken() == EOF) {
                     copy.setNext(EOF);
                 }
@@ -102,8 +102,8 @@ public class CobolDAToken {
         return first == null ? EOF : first;
     }
 
-    private boolean isMatch(CobolDAToken token, CobolDATokenType[] typesToRemove) {
-        for( CobolDATokenType cobolTokenType : typesToRemove )
+    private boolean isMatch(DataAreaToken token, DataAreaTokenType[] typesToRemove) {
+        for( DataAreaTokenType cobolTokenType : typesToRemove )
         {
             if( token._type == cobolTokenType )
             {
@@ -113,7 +113,7 @@ public class CobolDAToken {
         return false;
     }
 
-    private CobolDAToken first() {
+    private DataAreaToken first() {
         if (_previous == null) {
             return this;
         } else {
@@ -121,7 +121,7 @@ public class CobolDAToken {
         }
     }
 
-    private String toStringForDebug(CobolDAToken current) {
+    private String toStringForDebug(DataAreaToken current) {
         if (isEOF()) {
             if (this == current) {
                 return "[|EOF]";
@@ -154,39 +154,39 @@ public class CobolDAToken {
     }
 
     public boolean isSymbol() {
-        return _type == CobolDATokenType.SYMBOL;
+        return _type == DataAreaTokenType.SYMBOL;
     }
 
     public boolean isNumber() {
-        return _type == CobolDATokenType.NUMBER;
+        return _type == DataAreaTokenType.NUMBER;
     }
 
     public boolean isOperator() {
-        return _type == CobolDATokenType.OPERATOR;
+        return _type == DataAreaTokenType.OPERATOR;
     }
 
     public boolean isTerminator() {
-        return _type == CobolDATokenType.OPERATOR && _value.equals(".");
+        return _type == DataAreaTokenType.OPERATOR && _value.equals(".");
     }
 
     public boolean isKeyword() {
-        return _type == CobolDATokenType.KEYWORD;
+        return _type == DataAreaTokenType.KEYWORD;
     }
 
     public boolean isComment() {
-        return _type == CobolDATokenType.COMMENT;
+        return _type == DataAreaTokenType.COMMENT;
     }
 
     public boolean isNumberDef() {
-        return _type == CobolDATokenType.NUMBER_DEF;
+        return _type == DataAreaTokenType.NUMBER_DEF;
     }
 
-    public CobolDATokenType getTokenType() {
+    public DataAreaTokenType getTokenType() {
         return _type;
     }
 
     public boolean endOf(String... tokens) {
-        CobolDAToken current = this;
+        DataAreaToken current = this;
         for (int i = tokens.length - 1; i >= 0; i--) {
             if (!current.match(tokens[i])) {
                 return false;

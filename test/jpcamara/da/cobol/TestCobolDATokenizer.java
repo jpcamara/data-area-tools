@@ -1,8 +1,7 @@
 package jpcamara.da.cobol;
 
-import jpcamara.da.CobolDAToken;
-import jpcamara.da.CobolDATokenType;
-import jpcamara.da.cobol.CobolDATokenizer;
+import jpcamara.da.DataAreaToken;
+import jpcamara.da.DataAreaTokenType;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -23,35 +22,36 @@ public class TestCobolDATokenizer {
             "*" + NEW_LINE +
             "      10 :P:-SECTION-A." + NEW_LINE +
             "        15 :P:-FIRST-CONTENT               PIC X.";
-    
+
+    //TODO not handling names starting without :P: --> HA!
     @Test
     public void parseDA() throws Exception {
         CobolDATokenizer tokenizer = new CobolDATokenizer(SAMPLE_DA, ":P:");
-        List<CobolDATokenType> tokens = Arrays.asList(
-                CobolDATokenType.COMMENT,
-                CobolDATokenType.COMMENT,
-                CobolDATokenType.COMMENT,
-                CobolDATokenType.NUMBER,
-                CobolDATokenType.SYMBOL,
-                CobolDATokenType.OPERATOR,
-                CobolDATokenType.NUMBER,
-                CobolDATokenType.SYMBOL,
-                CobolDATokenType.OPERATOR,
-                CobolDATokenType.COMMENT,
-                CobolDATokenType.COMMENT,
-                CobolDATokenType.COMMENT,
-                CobolDATokenType.NUMBER,
-                CobolDATokenType.SYMBOL,
-                CobolDATokenType.OPERATOR,
-                CobolDATokenType.NUMBER,
-                CobolDATokenType.SYMBOL,
-                CobolDATokenType.KEYWORD,
-                CobolDATokenType.STRING_DEF,
-                CobolDATokenType.OPERATOR
+        List<DataAreaTokenType> tokens = Arrays.asList(
+                DataAreaTokenType.COMMENT,
+                DataAreaTokenType.COMMENT,
+                DataAreaTokenType.COMMENT,
+                DataAreaTokenType.NUMBER,
+                DataAreaTokenType.SYMBOL,
+                DataAreaTokenType.OPERATOR,
+                DataAreaTokenType.NUMBER,
+                DataAreaTokenType.SYMBOL,
+                DataAreaTokenType.OPERATOR,
+                DataAreaTokenType.COMMENT,
+                DataAreaTokenType.COMMENT,
+                DataAreaTokenType.COMMENT,
+                DataAreaTokenType.NUMBER,
+                DataAreaTokenType.SYMBOL,
+                DataAreaTokenType.OPERATOR,
+                DataAreaTokenType.NUMBER,
+                DataAreaTokenType.SYMBOL,
+                DataAreaTokenType.KEYWORD,
+                DataAreaTokenType.STRING_DEF,
+                DataAreaTokenType.OPERATOR
         );
         int i = 0;
         while (tokenizer.hasMoreTokens()) {
-            CobolDAToken token = tokenizer.nextToken();
+            DataAreaToken token = tokenizer.nextToken();
             assertEquals(tokens.get(i), token.getTokenType());
             i++;
         }

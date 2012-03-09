@@ -1,8 +1,8 @@
 package jpcamara.da.cobol;
 
-import jpcamara.da.CobolDAToken;
-import jpcamara.da.CobolDATokenType;
 import jpcamara.da.DataAreaNode;
+import jpcamara.da.DataAreaToken;
+import jpcamara.da.DataAreaTokenType;
 import jpcamara.da.DataAreaValueType;
 
 import java.util.Arrays;
@@ -18,7 +18,7 @@ public class CobolDATokenizer {
     private int _currentStartOffset;
     private int _currentEndOffset;
     private String symbolReplace;
-    private CobolDATokenType _type;
+    private DataAreaTokenType _type;
     private List<String> COBOL_KEYWORDS = Arrays.asList(
         "PIC", "REDEFINES", "OCCURS", "TIMES", "INDEXED", "BY" //"VALUE"
     );
@@ -50,37 +50,37 @@ public class CobolDATokenizer {
 
         if (consumeEightyEight()) {
             //remove 88's
-            _type = CobolDATokenType.COMMENT;
+            _type = DataAreaTokenType.COMMENT;
         }
         else if (consumeNumberDef()) {
-            _type = CobolDATokenType.NUMBER_DEF;
+            _type = DataAreaTokenType.NUMBER_DEF;
         }
         else if (consumeStringDef()) {
-            _type = CobolDATokenType.STRING_DEF;
+            _type = DataAreaTokenType.STRING_DEF;
         }
         else if (consumeNumber()) {
-            _type = CobolDATokenType.NUMBER;
+            _type = DataAreaTokenType.NUMBER;
         }
         else if (consumeOperator()) {
-            _type = CobolDATokenType.OPERATOR;
+            _type = DataAreaTokenType.OPERATOR;
         }
         else if (consumeKeyword()) {
-            _type = CobolDATokenType.KEYWORD;
+            _type = DataAreaTokenType.KEYWORD;
         }
         else if (consumeSymbol()) {
-            _type = CobolDATokenType.SYMBOL;
+            _type = DataAreaTokenType.SYMBOL;
         }
         else if (consumeComment()) {
-            _type = CobolDATokenType.COMMENT;
+            _type = DataAreaTokenType.COMMENT;
         }
         else {
-            _type = CobolDATokenType.UNKNOWN;
+            _type = DataAreaTokenType.UNKNOWN;
             consumeChar();
         }
 
         _currentEndOffset = _offset;
         _currentStringValue = _contents.substring(_currentStartOffset, _currentEndOffset);
-        if (_type == CobolDATokenType.SYMBOL) {
+        if (_type == DataAreaTokenType.SYMBOL) {
             _currentStringValue = _currentStringValue.replaceFirst(symbolReplace, "");
         }
 
@@ -88,7 +88,7 @@ public class CobolDATokenizer {
     }
 
     private boolean consumeStringDef() {
-        if (_type == CobolDATokenType.KEYWORD && _currentStringValue.equals("PIC")
+        if (_type == DataAreaTokenType.KEYWORD && _currentStringValue.equals("PIC")
                 && currentChar() == 'X') {
             while (currentChar() == 'X' || currentChar() == '('
                     || currentChar() == ')' || Character.isDigit(currentChar())) {
@@ -100,7 +100,7 @@ public class CobolDATokenizer {
     }
 
     private boolean consumeNumberDef() {
-        if (_type == CobolDATokenType.KEYWORD && _currentStringValue.equals("PIC")
+        if (_type == DataAreaTokenType.KEYWORD && _currentStringValue.equals("PIC")
                 && currentChar() == '9') {
             while (currentChar() == 'V' || currentChar() == '('
                     || currentChar() == ')' || Character.isDigit(currentChar())) {
@@ -253,8 +253,8 @@ public class CobolDATokenizer {
         return _contents.charAt(_offset);
     }
 
-    public CobolDAToken nextToken() {
-        return new CobolDAToken(_type, _currentStringValue, _line, _currentCol, _currentStartOffset, _currentEndOffset);
+    public DataAreaToken nextToken() {
+        return new DataAreaToken(_type, _currentStringValue, _line, _currentCol, _currentStartOffset, _currentEndOffset);
     }
     
     public static void main(String[] args) throws Exception {
