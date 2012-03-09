@@ -6,8 +6,8 @@ Currently only has capabilities for COBOL Data Areas, and not the full set of fu
 Idea is - Data Area definitions are setup like trees
 
 + 01 TOP-LEVEL
-++ 05 LOWER-LEVEL
-+++ 10 SOME-DATA      PIC X(2).
++     05 LOWER-LEVEL
++         10 SOME-DATA      PIC X(2).
 
 So why not be able to traverse the data like a tree, and use the DA structure as the definition of what that tree looks like?
 Then since it's a tree - hey, let's use XPath on it!
