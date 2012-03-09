@@ -9,28 +9,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CobolDATokenizer {
-    private String _currentStringValue;
-    private String _contents;
-    private int _line;
-    private int _col;
-    private int _offset;
-    private int _currentCol;
-    private int _currentStartOffset;
-    private int _currentEndOffset;
+    private String currentStringValue;
+    private String contents;
+    private int line;
+    private int col;
+    private int offset;
+    private int currentCol;
+    private int currentStartOffset;
+    private int currentEndOffset;
     private String symbolReplace;
-    private DataAreaTokenType _type;
+    private DataAreaTokenType type;
     private List<String> COBOL_KEYWORDS = Arrays.asList(
         "PIC", "REDEFINES", "OCCURS", "TIMES", "INDEXED", "BY" //"VALUE"
     );
 
     public CobolDATokenizer(String contents, String symbolReplace) {
-        _contents = contents;
-        _line = 1;
-        _col = 1;
-        _offset = 0;
-        _currentStartOffset = 0;
-        _currentEndOffset = 0;
-        _currentStringValue = null;
+        this.contents = contents;
+        this.line = 1;
+        this.col = 1;
+        this.offset = 0;
+        this.currentStartOffset = 0;
+        this.currentEndOffset = 0;
+        this.currentStringValue = null;
         this.symbolReplace = symbolReplace + "-";
     }
 
@@ -45,50 +45,50 @@ public class CobolDATokenizer {
             return false;
         }
 
-        _currentStartOffset = _offset;
-        _currentCol = _col;
+        currentStartOffset = offset;
+        currentCol = col;
 
         if (consumeEightyEight()) {
             //remove 88's
-            _type = DataAreaTokenType.COMMENT;
+            type = DataAreaTokenType.COMMENT;
         }
         else if (consumeNumberDef()) {
-            _type = DataAreaTokenType.NUMBER_DEF;
+            type  = DataAreaTokenType.NUMBER_DEF;
         }
         else if (consumeStringDef()) {
-            _type = DataAreaTokenType.STRING_DEF;
+            type  = DataAreaTokenType.STRING_DEF;
         }
         else if (consumeNumber()) {
-            _type = DataAreaTokenType.NUMBER;
+            type  = DataAreaTokenType.NUMBER;
         }
         else if (consumeOperator()) {
-            _type = DataAreaTokenType.OPERATOR;
+            type  = DataAreaTokenType.OPERATOR;
         }
         else if (consumeKeyword()) {
-            _type = DataAreaTokenType.KEYWORD;
+            type  = DataAreaTokenType.KEYWORD;
         }
         else if (consumeSymbol()) {
-            _type = DataAreaTokenType.SYMBOL;
+            type  = DataAreaTokenType.SYMBOL;
         }
         else if (consumeComment()) {
-            _type = DataAreaTokenType.COMMENT;
+            type  = DataAreaTokenType.COMMENT;
         }
         else {
-            _type = DataAreaTokenType.UNKNOWN;
+            type  = DataAreaTokenType.UNKNOWN;
             consumeChar();
         }
 
-        _currentEndOffset = _offset;
-        _currentStringValue = _contents.substring(_currentStartOffset, _currentEndOffset);
-        if (_type == DataAreaTokenType.SYMBOL) {
-            _currentStringValue = _currentStringValue.replaceFirst(symbolReplace, "");
+        currentEndOffset = offset;
+        currentStringValue = contents.substring(currentStartOffset, currentEndOffset);
+        if (type == DataAreaTokenType.SYMBOL) {
+            currentStringValue = currentStringValue.replaceFirst(symbolReplace, "");
         }
 
         return true;
     }
 
     private boolean consumeStringDef() {
-        if (_type == DataAreaTokenType.KEYWORD && _currentStringValue.equals("PIC")
+        if (type == DataAreaTokenType.KEYWORD && currentStringValue.equals("PIC")
                 && currentChar() == 'X') {
             while (currentChar() == 'X' || currentChar() == '('
                     || currentChar() == ')' || Character.isDigit(currentChar())) {
@@ -100,7 +100,7 @@ public class CobolDATokenizer {
     }
 
     private boolean consumeNumberDef() {
-        if (_type == DataAreaTokenType.KEYWORD && _currentStringValue.equals("PIC")
+        if (type == DataAreaTokenType.KEYWORD && currentStringValue.equals("PIC")
                 && currentChar() == '9') {
             while (currentChar() == 'V' || currentChar() == '('
                     || currentChar() == ')' || Character.isDigit(currentChar())) {
@@ -177,7 +177,7 @@ public class CobolDATokenizer {
     }
 
     private char peek() {
-        return _contents.charAt(_offset+1);
+        return contents.charAt(offset + 1);
     }
 
     private void consumeDigit() {
@@ -218,43 +218,43 @@ public class CobolDATokenizer {
     }
 
     private char peek(int i) {
-        return _contents.charAt(_offset + i);
+        return contents.charAt(offset + i);
     }
 
     private boolean canPeek(int count) {
-        return _offset + count < _contents.length();
+        return offset + count < contents.length();
     }
 
 
     private boolean atEndOfInput() {
-        return _contents == null || _offset >= _contents.length();
+        return contents == null || offset >= contents.length();
     }
 
     private void eatWhitespace() {
         while (!atEndOfInput() && Character.isWhitespace(currentChar())) {
             if ('\n' == currentChar()) {
-                _line++;
-                _col = 0;
+                line++;
+                col = 0;
             }
             incrementOffset();
         }
     }
 
     private void incrementOffset() {
-        _offset++;
-        _col++;
+        offset++;
+        col++;
     }
 
     private char lastChar() {
-        return _contents.charAt(_offset - 1);
+        return contents.charAt(offset - 1);
     }
 
     private char currentChar() {
-        return _contents.charAt(_offset);
+        return contents.charAt(offset);
     }
 
     public DataAreaToken nextToken() {
-        return new DataAreaToken(_type, _currentStringValue, _line, _currentCol, _currentStartOffset, _currentEndOffset);
+        return new DataAreaToken(type, currentStringValue, line, currentCol, currentStartOffset, currentEndOffset);
     }
     
     public static void main(String[] args) throws Exception {
