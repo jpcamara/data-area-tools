@@ -26,6 +26,7 @@ And many others could as well. If nothing else it gives a strange exploration of
 + Parse z/OS Assembler DA into same DataAreaNodes as COBOL goes into. That'll be fun.
 + Lots of tests.
 + Gosu Typeloader for DA's? Am I that sick in the head?
++ Decide if this should be ANTLR driven? Is custom parsing for chumps?
 
 # I'm leaving now
 
