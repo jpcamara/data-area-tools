@@ -1,3 +1,7 @@
-01 :P:-LEVEL.
-  05 :P:-LEVEL-2.
-    10 :P:-LEVEL-3     PIC X.
+01 LEVEL.
+  05 LEVEL-2.
+    10 LEVEL-3     PIC X.
+    10 LEVEL-3-1   PIC XXX.
+    10 LEVEL-3-2   PIC 99V99(2).
+    10 LEVEL-3-3.
+      15 LEVEL-4   PIC XXXXX.

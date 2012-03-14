@@ -13,7 +13,8 @@ public class TestDataAreaNavigator {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        DA = new CobolDAParser(new File("test/jpcamara/da/jaxen/sample-da.txt"), ":P:").parseDA();
+//        DA = new CobolDAParser(new File("test/jpcamara/da/jaxen/sample-da.txt"), ":P:").parseDA();
+        DA = new CobolDAParser(new File("test/jpcamara/da/jaxen/sample-da.txt"), "").parseDA();
     }
 
     @Test

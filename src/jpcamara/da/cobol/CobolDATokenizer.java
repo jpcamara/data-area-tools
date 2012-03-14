@@ -31,7 +31,7 @@ public class CobolDATokenizer {
         this.currentStartOffset = 0;
         this.currentEndOffset = 0;
         this.currentStringValue = null;
-        this.symbolReplace = symbolReplace + "-";
+        this.symbolReplace = symbolReplace;
     }
 
     public boolean hasMoreTokens() {
@@ -135,12 +135,14 @@ public class CobolDATokenizer {
                     break;
                 }
             }
-            if (hasKeyword && !atEndOfInput() && canPeek(keyword.length) && 
-                    Character.isWhitespace(peek(keyword.length)) || peek(keyword.length) == '.') {
-                for (int i = 0; i < keyword.length; i++) {
-                    consumeChar();
+            if (hasKeyword) {
+                if (!atEndOfInput() && canPeek(keyword.length) &&
+                        Character.isWhitespace(peek(keyword.length)) || peek(keyword.length) == '.') {
+                    for (int i = 0; i < keyword.length; i++) {
+                        consumeChar();
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         
