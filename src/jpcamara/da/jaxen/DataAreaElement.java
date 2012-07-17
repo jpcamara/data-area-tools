@@ -2,6 +2,8 @@ package jpcamara.da.jaxen;
 
 import jpcamara.da.DataAreaNode;
 
+import java.util.Arrays;
+
 /**
  * Object handed around in Jaxen processing
  */
@@ -69,5 +71,10 @@ public class DataAreaElement {
 
     public void setDefinition(DataAreaNode definition) {
         this.definition = definition;
+    }
+
+    @Override
+    public String toString() {
+        return "Name = " + name + " [" + new String(payload) + "] length: " + length + " offset: " + offset;
     }
 }

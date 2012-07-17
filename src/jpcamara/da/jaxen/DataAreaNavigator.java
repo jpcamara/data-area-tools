@@ -17,21 +17,21 @@ public class DataAreaNavigator extends DefaultNavigator implements NamedAccessNa
     public Iterator getChildAxisIterator(Object contextNode, String localName, String namespacePrefix,
                                          String namespaceURI) throws UnsupportedAxisException {
         DataAreaElement element = (DataAreaElement)contextNode;
-        int offset = element.getOffset();
+        int offset = element.getOffset(), newOffset = offset;
         int length = element.getLength();
         byte[] payload = element.getPayload();
-        
+
         for (DataAreaNode child : element.getDefinition().getChildren()) {
             if (localName.equals(child.getName())) {
                 int occurs = child.getOccurs();
                 int newLength = child.getLength();
                 if (occurs == 1) {
                     DataAreaElement childElement =
-                        new DataAreaElement(element, localName, payload, offset, newLength, child);
+                        new DataAreaElement(element, localName, payload, newOffset, newLength, child);
                     return new SingleObjectIterator(childElement);
                 }
                 
-                int newOffset = offset;
+//                int newOffset = offset;
                 List<DataAreaElement> elements = new ArrayList<DataAreaElement>();
                 for (int i = 0; i < occurs; i++) {
                     DataAreaElement childElement =
@@ -40,6 +40,8 @@ public class DataAreaNavigator extends DefaultNavigator implements NamedAccessNa
                     newOffset += child.getLength();
                 }
                 return new DataAreaElementIterator(element, elements.iterator());
+            } else {
+                newOffset += child.getLength() * child.getOccurs(); //move to next offset
             }
         }
 
