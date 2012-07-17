@@ -19,7 +19,7 @@ public class TestDataAreaNavigator {
     public static void setUpClass() throws Exception {
 //        DA = new CobolDAParser(new File("test/jpcamara/da/jaxen/sample-da.txt"), ":P:").parseDA();
         DA = new CobolDAParser(new File("test/jpcamara/da/jaxen/sample-da.txt"), "").parseDA();
-        root = new DataAreaElement(null, DA.getName(), "12223333344444".getBytes(), 0, DA.getLength(), DA);
+        root = new DataAreaElement(null, DA.getName(), "1222333344444".getBytes(), 0, DA.getLength(), DA);
     }
 
     /*
@@ -53,7 +53,30 @@ public class TestDataAreaNavigator {
         DataAreaElement element = elements.get(0);
         int offset = element.getOffset();
         Assert.assertEquals(4, element.getOffset());
+        Assert.assertEquals(4, element.getLength());
+        Assert.assertEquals("3333", new String(Arrays.copyOfRange(element.getPayload(), offset, offset + element.getLength())));
+
+        //Level 3-3
+        xpath = new BaseXPath("LEVEL-2/LEVEL-3-3", new DataAreaNavigator());
+        DataAreaElement level33 = (DataAreaElement) xpath.selectSingleNode(root);
+        offset = level33.getOffset();
+        Assert.assertEquals(8, level33.getOffset());
+        Assert.assertEquals(40, level33.getLength());
+
+        //Level 4
+        xpath = new BaseXPath("LEVEL-4", new DataAreaNavigator());
+        element = (DataAreaElement) xpath.selectSingleNode(level33);
+        offset = element.getOffset();
+        Assert.assertEquals("LEVEL-4", element.getName());
+        Assert.assertEquals(8, element.getOffset());
         Assert.assertEquals(5, element.getLength());
-        Assert.assertEquals("33333", new String(Arrays.copyOfRange(element.getPayload(), offset, offset + element.getLength())));
+    }
+
+    @Test
+    public void occurs() throws Exception {
+        BaseXPath xpath = new BaseXPath("LEVEL-2-2", new DataAreaNavigator());
+        DataAreaElement element = (DataAreaElement)xpath.selectSingleNode(root);
+        Assert.assertEquals(53, element.getOffset());
+        Assert.assertEquals(9, element.getLength());
     }
 }

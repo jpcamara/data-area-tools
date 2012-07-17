@@ -144,6 +144,9 @@ public class CobolDAParser {
                     length++;
                 }
             }
+            if (currentToken.isNumberDef() && definition[i] == 'V') { //implied decimal!
+                i++;
+            }
             if (definition[i] == '(') {
                 StringBuilder number = new StringBuilder();
                 while (definition[i] != ')') {
