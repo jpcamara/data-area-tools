@@ -173,18 +173,27 @@ public class CobolDAParser {
         int level = Integer.parseInt(currentToken.getValue());
         if (levels.peek() == null) { //first element
             levels.push(level);
+
+            currentNodeLocal.setLevel(level); //level info
+
             return currentNodeLocal;
         }
         else if (levels.peek() == level) { //same level
             tempNode.setParent(currentNodeLocal.getParent());
             currentNodeLocal.getParent().getChildren().add(tempNode);
             currentNodeLocal.setSibling(tempNode);
+
+            tempNode.setLevel(level); //level info
+
             return tempNode;
         }
         else if (levels.peek() < level) { //lower level
             levels.push(level);
             tempNode.setParent(currentNodeLocal);
             currentNodeLocal.getChildren().add(tempNode);
+
+            tempNode.setLevel(level); //level info
+
             return tempNode;
         }
         else if (levels.peek() > level) { //going back up, find which level

@@ -13,6 +13,15 @@ public class DataAreaNode {
     private int length;
     private boolean redefine;
     private DataAreaNode redefinedNode;
+    private int level; //FIXME is this too cobol specific?
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
     public DataAreaNode getRedefinedNode() {
         return redefinedNode;
@@ -88,7 +97,7 @@ public class DataAreaNode {
     
     @Override
     public String toString() {
-        return String.format("Name = [%s], Length = [%d], Occurs = [%d], Redefines = [%s]",
-                name, length, occurs, redefine);
+        return String.format("Level = [%d], Name = [%s], Length = [%d], Occurs = [%d], Redefines = [%s]",
+                level, name, length, occurs, redefine);
     }
 }
