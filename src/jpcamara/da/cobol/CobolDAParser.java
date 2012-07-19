@@ -22,7 +22,7 @@ public class CobolDAParser {
         BufferedReader reader = new BufferedReader(new FileReader(fileContent));
         String line = null;
         while ((line = reader.readLine()) != null) {
-            content.append(line);
+            content.append(line + System.getProperty("line.separator"));
         }
         currentToken = DataAreaToken.tokenize(content.toString(), symbolReplace).removeTokens(DataAreaTokenType.COMMENT);
     } 
@@ -56,6 +56,10 @@ public class CobolDAParser {
             else if (previous != null
                     && previous.isNumber()
                     && currentToken.isSymbol()) {
+                //we got a new level, but before the level we didn't find a terminator
+                if (previous.previousToken() != null && !previous.previousToken().isTerminator()) {
+                    throw new RuntimeException("Level started without previous level ending with a period. " + currentToken);
+                }
                 currentNode.setName(currentToken.getValue());
             }
             //get PIC info about the node

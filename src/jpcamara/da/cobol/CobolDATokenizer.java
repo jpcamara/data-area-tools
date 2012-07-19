@@ -234,7 +234,7 @@ public class CobolDATokenizer {
 
     private void eatWhitespace() {
         while (!atEndOfInput() && Character.isWhitespace(currentChar())) {
-            if ('\n' == currentChar()) {
+            if ('\n' == currentChar()) {// || '\r' == currentChar()) {
                 line++;
                 col = 0;
             }
